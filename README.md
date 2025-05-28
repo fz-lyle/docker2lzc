@@ -5,12 +5,12 @@
 ## 安装 
 
 ```
-npm install -g lzc-dtl
+npm install -g docker2lzc
 ```
 
 ### 使用
 
 ```
-lzc-dtl --help #帮助
-lzc-dtl #交互模式
+docker2lzc --help #帮助
+docker2lzc #交互模式
 ```

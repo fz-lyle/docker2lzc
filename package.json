@@ -1,10 +1,10 @@
 {
-  "name": "lzc-dtl",
+  "name": "docker2lzc",
   "version": "1.0.25",
   "description": "懒猫微服应用转换器",
   "main": "src/index.js",
   "bin": {
-    "lzc-dtl": "./bin/lzc-dtl.js"
+    "docker2lzc": "./bin/lzc-dtl.js"
   },
   "dependencies": {
     "archiver": "^5.3.1",
@@ -25,12 +25,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/lzc-dtl.git"
+    "url": "git+https://gitee.com/fzlrkj/docker2lzc.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/lzc-dtl/issues"
+    "url": "https://gitee.com/fzlrkj/docker2lzc/issues"
   },
-  "homepage": "https://github.com/yourusername/lzc-dtl#readme",
+  "homepage": "https://gitee.com/fzlrkj/docker2lzc.git",
   "engines": {
     "node": ">=12.0.0"
   }
