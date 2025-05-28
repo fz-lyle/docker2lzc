@@ -1,8 +1,11 @@
 {
   "name": "docker2lzc",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "懒猫微服应用转换器",
   "main": "src/index.js",
+  "scripts": {
+    "dev": "node ./bin/lzc-dtl.js"
+  },
   "bin": {
     "docker2lzc": "./bin/lzc-dtl.js"
   },

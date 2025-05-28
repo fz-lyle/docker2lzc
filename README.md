@@ -12,5 +12,7 @@ npm install -g docker2lzc
 
 ```
 docker2lzc --help #帮助
+docker2lzc --version #获取当前版本
+docker2lzc --update #更新到最新版本
 docker2lzc #交互模式
 ```
