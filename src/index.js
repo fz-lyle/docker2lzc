@@ -7,6 +7,7 @@ const tar = require('tar');
 const dotenv = require('dotenv');
 const crypto = require('crypto');
 const os = require('os');
+const { spawn } = require('node:child_process');
 
 const ASCII_LOGO = `
 $$\\                                   $$\\   $$\\     $$\\ 
@@ -420,7 +421,7 @@ async function convertApp(options = {}) {
                 }]);
                 options.compose = composeAnswer.composePath;
                 
-                // 使用辅助函��更新缓存
+                // 使用辅助函数更新缓存
                 cache = await updateCache(cache, { composePath: options.compose });
             }
         }
@@ -649,7 +650,7 @@ async function convertApp(options = {}) {
                                             }
                                         });
 
-                                        // 构建 URL，确保路径��确拼接
+                                        // 构建 URL，确保路径正确拼接
                                         const targetPath = targetPathAnswer.targetPath.startsWith('/') ? targetPathAnswer.targetPath : '/' + targetPathAnswer.targetPath;
                                         const target = `${routeTypeForPort.type}://${serviceName}.${answers.package}.lzcapp:${containerPort}${targetPath}`;
 
@@ -1054,7 +1055,7 @@ async function convertApp(options = {}) {
                 const { stdout } = await execCommand(`lzc-cli appstore copy-image ${imageName}`);
                 
                 // 从输出中提取新的镜像地址
-                const match = stdout.match(/lazycat-registry: (.*)/);
+                const match = stdout.match(/uploaded:\s+(.*)/);
                 if (!match) {
                     throw new Error('无法从输出中获取懒猫微服镜像地址');
                 }
@@ -1251,7 +1252,7 @@ async function convertApp(options = {}) {
                             // 处理匿名卷
                             targetPath = volumeParts[0].trim();
                             
-                            // 询问���户如何处理匿名卷
+                            // 询问用户如何处理匿名卷
                             const volumeActionAnswer = await inquirer.prompt([{
                                 type: 'list',
                                 name: 'action',
@@ -1571,12 +1572,12 @@ async function processImage(imageName, packageName, cache, globalConfig, service
         const result = await execCommand(`lzc-cli appstore copy-image ${imageName}`);
         
         // 打印完整输出以便调试
-        console.log('命令输出:', result.stdout);
         if (result.stderr) {
             console.log('错误输出:', result.stderr);
         }
-        
-        const match = result.stdout.match(/lazycat-registry: (.*)/);
+
+        // 从输出中提取新的镜像地址
+        const match = result.stdout.match(/uploaded:\s+(.*)/);
         if (!match) {
             throw new Error('无法从输出中获取懒猫微服镜像地址，请检查 lzc-cli 命令输出');
         }
@@ -1607,7 +1608,7 @@ async function processImage(imageName, packageName, cache, globalConfig, service
             type: 'input',
             name: 'url',
             message: '请输入远程仓库地址：',
-            validate: input => input.trim() ? true : '仓库地址不能���空'
+            validate: input => input.trim() ? true : '仓库地址不能为空'
         }]);
         
         registryUrl = registryAnswer.url;
@@ -1656,15 +1657,30 @@ async function processImage(imageName, packageName, cache, globalConfig, service
 
 // 修改 execCommand 函数
 async function execCommand(command) {
-    const { exec } = require('child_process');
     return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                reject(new Error(`执行命令失败: ${error.message}`));
-                return;
+        const process = spawn(command, { shell: true });
+
+        let stdout = '';
+        let stderr = '';
+
+        process.stdout.on('data', (data) => {
+            const output = data.toString();
+            stdout += output;
+            console.log(output); // 实时输出到控制台
+        });
+
+        process.stderr.on('data', (data) => {
+            const error = data.toString();
+            stderr += error;
+            console.error(error); // 实时输出错误到控制台
+        });
+
+        process.on('close', (code) => {
+            if (code === 0) {
+                resolve({ stdout, stderr });
+            } else {
+                reject(new Error(`Command failed with exit code ${code}`));
             }
-            // 同时返回 stdout 和 stderr
-            resolve({ stdout: stdout.trim(), stderr: stderr.trim() });
         });
     });
 }
