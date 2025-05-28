@@ -1,6 +1,6 @@
 {
   "name": "docker2lzc",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "懒猫微服应用转换器",
   "main": "src/index.js",
   "bin": {
