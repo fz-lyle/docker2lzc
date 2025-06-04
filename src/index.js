@@ -856,7 +856,7 @@ async function convertApp(options = {}) {
                 portable: true,
                 // 排除一些不需要的文件和目录
                 filter: (path) => {
-                    const excludes = ['node_modules', '.git', '*.lpk', 'content.tar'];
+                    const excludes = ['node_modules', '.git', '*.lpk', 'content.tar', 'docker-compose.yml', 'icon.png'];
                     return !excludes.some(exclude => path.includes(exclude));
                 }
             },
